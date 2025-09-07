@@ -34,7 +34,7 @@ services:
       - --oidc-issuer-url=https://gitlab.lrz.de
       - --client-id=aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6
       - --client-secret=gloas-768145695d9de273fcbffc6fc6bd166e91b0fe8c3339437c92a9fd68c363cc25
-      - --cookie-secret=twoohh_xvL11L9MfKme9rjjR3kRJhwA_FzYjNpT7pfc=
+      - --cookie-secret=mlNPNngyVxwDQ7YRaw3vPHFAZihJdwJgGRiMu9hADR8=
       - --email-domain=*
       - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
       - --upstream=file:///dev/null
