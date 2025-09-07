@@ -40,14 +40,7 @@ docker network create web
 
 ````
 htpasswd -nbB shinyuser shinyuser
+
+#- "traefik.http.middlewares.auth-dashboard.basicauth.users=shinyuser:$2y$05$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC,seconduser:$2y$05$<seconduserhash>"
+
 ```
-
-
-````
-# To create a new .htpasswd file with first user
-htpasswd -cB .htpasswd shinyuser
-
-# Add more users (without -c to avoid overwriting)
-htpasswd -B .htpasswd user2
-htpasswd -B .htpasswd user3
-````
