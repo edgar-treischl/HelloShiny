@@ -1,0 +1,8 @@
+http:
+  middlewares:
+    auth-causality:
+      basicAuth:
+        usersFile: "/config/.htpasswd"
+    auth-dashboard:
+      basicAuth:
+        usersFile: "/config/.htpasswd"
