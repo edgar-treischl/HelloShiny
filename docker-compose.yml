@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 networks:
   web:
-    driver: bridge
+    external: true
 
 services:
   traefik:
@@ -19,48 +19,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "8080:8080"  # Traefik dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
-    networks:
-      - web
-
-  oauth2-proxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-    restart: unless-stopped
-    command:
-      - --oauth2-prefix=/oauth2
-      - --provider=oidc
-      - --oidc-issuer-url=https://gitlab.lrz.de
-      - --client-id=e4f56e8dc0d04aeb729fe51b5911cf26ff6238c98f4cf3254a004c0f8a8cd861
-      - --client-secret=gloas-9f2c717c8babdd2270e2deffae7a8cb0569962d51b0b4c9629cd7a559e8924b2
-      - --cookie-secret=iWUEYmYz3dHQFN1iOcyi26LFG5fesM7bIiQjkJJrx6U=
-      - --cookie-domain=.edgar-treischl.de
-      - --cookie-samesite=none
-      - --email-domain=*
-      - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
-      - --http-address=0.0.0.0:4180
-      - --set-xauthrequest=true
-      - --set-authorization-header=true
-      - --code-challenge-method=S256
-      - --scope=openid profile email
-      - --cookie-secure=true
-      - --pass-basic-auth=true
-      - --skip-provider-button=true
-      - --skip-auth-regex=^/favicon.ico$
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:4180/ping"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`) && PathPrefix(`/oauth2`)"
-      - "traefik.http.routers.oauth2.entrypoints=websecure"
-      - "traefik.http.routers.oauth2.tls.certresolver=le"
-      - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
     networks:
       - web
 
@@ -73,9 +35,5 @@ services:
       - "traefik.http.routers.causality.entrypoints=websecure"
       - "traefik.http.routers.causality.tls.certresolver=le"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
-      - "traefik.http.routers.causality.middlewares=auth"
-      - "traefik.http.middlewares.auth.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth"
-      - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=Authorization,X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Groups,gap-auth"
     networks:
       - web

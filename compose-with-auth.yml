@@ -1,6 +1,8 @@
+version: '3.8'
+
 networks:
   web:
-    external: true
+    driver: bridge
 
 services:
   traefik:
@@ -17,7 +19,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"  # Traefik dashboard
+      - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
@@ -25,22 +27,37 @@ services:
       - web
 
   oauth2-proxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
     restart: unless-stopped
-    environment:
-      OAUTH2_PROXY_PROVIDER: "gitlab"
-      OAUTH2_PROXY_CLIENT_ID: "aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6"
-      OAUTH2_PROXY_CLIENT_SECRET: "gloas-65042a3cde7ab679c4ccaabb4046516eb5a151b77e1a1b83e53fad0889f7dc3d"
-      OAUTH2_PROXY_COOKIE_SECRET: "MCPjYQXfVmPXt/69cbHONWJpOcvHdzFn"
-      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
-      OAUTH2_PROXY_REDIRECT_URL: "https://auth.edgar-treischl.de/oauth2/callback"
-      OAUTH2_PROXY_UPSTREAMS: "file:///dev/null"
-      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
-      OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
-      OAUTH2_PROXY_ISSUER_URL: "https://gitlab.lrz.de/oauth/authorize"
+    command:
+      - --oauth2-prefix=/oauth2
+      - --provider=oidc
+      - --oidc-issuer-url=https://gitlab.lrz.de
+      - --client-id=client_id
+      - --client-secret=secret
+      - --cookie-secret=anothersecret
+      - --cookie-domain=.edgar-treischl.de
+      - --cookie-samesite=none
+      - --email-domain=*
+      - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
+      - --http-address=0.0.0.0:4180
+      - --set-xauthrequest=true
+      - --set-authorization-header=true
+      - --code-challenge-method=S256
+      - --scope=openid profile email
+      - --cookie-secure=true
+      - --pass-basic-auth=true
+      - --skip-provider-button=true
+      - --skip-auth-regex=^/favicon.ico$
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:4180/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`)"
+      - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`) && PathPrefix(`/oauth2`)"
       - "traefik.http.routers.oauth2.entrypoints=websecure"
       - "traefik.http.routers.oauth2.tls.certresolver=le"
       - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
@@ -59,6 +76,6 @@ services:
       - "traefik.http.routers.causality.middlewares=auth"
       - "traefik.http.middlewares.auth.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Auth-User"
+      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=Authorization,X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Groups,gap-auth"
     networks:
       - web
