@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - "--api.insecure=true"                    # Enable Traefik dashboard (disable in prod)
+      - "--providers.docker=true"                # Enable Docker provider
+      - "--entrypoints.web.address=:80"          # HTTP entrypoint
+      - "--entrypoints.websecure.address=:443"  # HTTPS entrypoint
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=your-email@example.com"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Traefik dashboard (optional)
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+
+  app1:
+    image: your-shiny-app1-image  # replace with your docker image
+    container_name: shiny_app1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app1.rule=Host(`app1.yourdomain.com`)"
+      - "traefik.http.routers.app1.entrypoints=websecure"
+      - "traefik.http.routers.app1.tls.certresolver=le"
+      - "traefik.http.services.app1.loadbalancer.server.port=3838"
