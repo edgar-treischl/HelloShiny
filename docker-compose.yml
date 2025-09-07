@@ -30,6 +30,7 @@ services:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
     restart: unless-stopped
     command:
+      - --oauth2-prefix=/oauth2
       - --provider=oidc
       - --oidc-issuer-url=https://gitlab.lrz.de
       - --client-id=e4f56e8dc0d04aeb729fe51b5911cf26ff6238c98f4cf3254a004c0f8a8cd861
@@ -56,7 +57,7 @@ services:
       start_period: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`)"
+      - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`) && PathPrefix(`/oauth2`)"
       - "traefik.http.routers.oauth2.entrypoints=websecure"
       - "traefik.http.routers.oauth2.tls.certresolver=le"
       - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
