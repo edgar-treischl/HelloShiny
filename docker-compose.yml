@@ -17,6 +17,8 @@ services:
   spectredash:
     image: ghcr.io/edgar-treischl/spectredash 
     container_name: spectredash
+    ports:
+      - "8000:8000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spectredash.rule=PathPrefix(`/spectredash`)"
@@ -24,6 +26,4 @@ services:
       - "traefik.http.services.spectredash.loadbalancer.server.port=8000"
       - "traefik.http.routers.spectredash.middlewares=strip-spectredash"
       - "traefik.http.middlewares.strip-spectredash.stripprefix.prefixes=/spectredash"
-    # Optional: expose port if you want direct access without Traefik
-    # ports:
-    #   - "8000:8000"
+
