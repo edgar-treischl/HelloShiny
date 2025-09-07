@@ -46,6 +46,8 @@ services:
       OAUTH2_PROXY_REDEEM_URL: "https://gitlab.lrz.de/oauth/token"
       OAUTH2_PROXY_PROFILE_URL: "https://gitlab.lrz.de/api/v4/user"
       OAUTH2_PROXY_VALIDATE_URL: "https://gitlab.lrz.de/api/v4/user"
+      OAUTH2_PROXY_OIDC_ISSUER_URL: "https://gitlab.lrz.de"   # <-- Added this line
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`)"
