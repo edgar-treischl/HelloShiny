@@ -10,15 +10,13 @@ services:
       - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
-      - "8080:8080"  # Optional dashboard
+      - "8080:8080"  # Optional Traefik dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   spectredash:
     image: ghcr.io/edgar-treischl/spectredash 
     container_name: spectredash
-    ports:
-      - "8000:8000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spectredash.rule=PathPrefix(`/spectredash`)"
@@ -26,3 +24,6 @@ services:
       - "traefik.http.services.spectredash.loadbalancer.server.port=8000"
       - "traefik.http.routers.spectredash.middlewares=strip-spectredash"
       - "traefik.http.middlewares.strip-spectredash.stripprefix.prefixes=/spectredash"
+    # Optional: expose port if you want direct access without Traefik
+    # ports:
+    #   - "8000:8000"
