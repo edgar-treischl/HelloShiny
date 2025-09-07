@@ -29,27 +29,25 @@ services:
   oauth2-proxy:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
     restart: unless-stopped
-    environment:
-      OAUTH2_PROXY_PROVIDER: "oidc"
-      OAUTH2_PROXY_OIDC_ISSUER_URL: "https://gitlab.lrz.de"
-      OAUTH2_PROXY_CLIENT_ID: "aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6"
-      OAUTH2_PROXY_CLIENT_SECRET: "gloas-768145695d9de273fcbffc6fc6bd166e91b0fe8c3339437c92a9fd68c363cc25"
-      OAUTH2_PROXY_COOKIE_SECRET: "MCPjYQXfVmPXt/69cbHONWJpOcvHdzFn"
-      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
-      OAUTH2_PROXY_REDIRECT_URL: "https://auth.edgar-treischl.de/oauth2/callback"
-      OAUTH2_PROXY_UPSTREAMS: "file:///dev/null"
-      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
-      OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
-      OAUTH2_PROXY_SCOPE: "openid profile email"
-      OAUTH2_PROXY_COOKIE_SECURE: "true"
-      OAUTH2_PROXY_LOG_LEVEL: "debug"
-      OAUTH2_PROXY_CODE_CHALLENGE_METHOD: "S256"  # PKCE enabled to fix warning
-      
-      OAUTH2_PROXY_PASS_BASIC_AUTH: "true"
-      OAUTH2_PROXY_SET_AUTH_HEADER: "true"
-      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
-      OAUTH2_PROXY_SKIP_AUTH_REGEX: "^/favicon.ico$"
-
+    command:
+      - --provider=oidc
+      - --oidc-issuer-url=https://gitlab.lrz.de
+      - --client-id=aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6
+      - --client-secret=gloas-768145695d9de273fcbffc6fc6bd166e91b0fe8c3339437c92a9fd68c363cc25
+      - --cookie-secret=MCPjYQXfVmPXt/69cbHONWJpOcvHdzFn
+      - --email-domain=*
+      - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
+      - --upstream=file:///dev/null
+      - --http-address=0.0.0.0:4180
+      - --set-xauthrequest=true
+      - --scope=openid profile email
+      - --cookie-secure=true
+      - --log-level=debug
+      - --code-challenge-method=S256
+      - --pass-basic-auth=true
+      - --set-auth-header=true
+      - --skip-provider-button=true
+      - --skip-auth-regex=^/favicon.ico$
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`)"
