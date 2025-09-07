@@ -19,4 +19,9 @@ services:
     container_name: spectredash
     ports:
       - "8000:8000"
-    # No Traefik labels here — app reachable only on port 8000
+
+  causalityapp:
+    image: ghcr.io/edgar-treischl/causalityapp 
+    container_name: causalityapp
+    ports:
+      - "8001:3838"
