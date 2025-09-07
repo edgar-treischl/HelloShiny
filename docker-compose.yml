@@ -15,15 +15,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   spectredash:
-    image: ghcr.io/edgar-treischl/spectredash 
+    image: ghcr.io/edgar-treischl/spectredash
     container_name: spectredash
     ports:
       - "8000:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.spectredash.rule=PathPrefix(`/spectredash`)"
-      - "traefik.http.routers.spectredash.entrypoints=web"
-      - "traefik.http.services.spectredash.loadbalancer.server.port=8000"
-      - "traefik.http.routers.spectredash.middlewares=strip-spectredash"
-      - "traefik.http.middlewares.strip-spectredash.stripprefix.prefixes=/spectredash"
-
+    # No Traefik labels here — app reachable only on port 8000
