@@ -14,13 +14,13 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  app1:
-    image: your-shiny-app1-image
-    container_name: shiny_app1
+  spectredash:
+    image: ghcr.io/edgar-treischl/spectredash 
+    container_name: spectredash
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app1.rule=PathPrefix(`/app1`)"
-      - "traefik.http.routers.app1.entrypoints=web"
-      - "traefik.http.services.app1.loadbalancer.server.port=3838"
-      - "traefik.http.routers.app1.middlewares=strip-app1"
-      - "traefik.http.middlewares.strip-app1.stripprefix.prefixes=/app1"
+      - "traefik.http.routers.spectredash.rule=PathPrefix(`/spectredash`)"
+      - "traefik.http.routers.spectredash.entrypoints=web"
+      - "traefik.http.services.spectredash.loadbalancer.server.port=3838"
+      - "traefik.http.routers.spectredash.middlewares=strip-spectredash"
+      - "traefik.http.middlewares.strip-spectredash.stripprefix.prefixes=/spectredash"
