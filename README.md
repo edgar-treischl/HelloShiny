@@ -36,3 +36,8 @@ head -c 32 /dev/urandom | base64 | head -c 32
 ````
 docker network create web
 ```
+
+
+````
+htpasswd -nbB shinyuser shinyuser
+```
