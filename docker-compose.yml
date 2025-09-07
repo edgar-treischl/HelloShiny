@@ -44,6 +44,9 @@ services:
       OAUTH2_PROXY_COOKIE_SECURE: "true"
       OAUTH2_PROXY_LOG_LEVEL: "debug"
       OAUTH2_PROXY_CODE_CHALLENGE_METHOD: "S256"  # PKCE enabled to fix warning
+      OAUTH2_PROXY_PASS_BASIC_AUTH: "true"
+      OAUTH2_PROXY_SET_AUTH_HEADER: "true"
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
 
     labels:
       - "traefik.enable=true"
