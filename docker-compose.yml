@@ -33,8 +33,8 @@ services:
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.tls.certresolver=le"
-      - "traefik.http.routers.traefik.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=edgar:$2y$05$7sXPVebhkGe7LMJrGaGmSu.ZHppK8UqZKdUSm1GpF23H4Y6jGdy0W"
+      - "traefik.http.routers.traefik.middlewares=auth-dashboard"
+      - "traefik.http.middlewares.auth-dashboard.basicauth.users=edgar:$2y$05$7sXPVebhkGe7LMJrGaGmSu.ZHppK8UqZKdUSm1GpF23H4Y6jGdy0W"
 
   causalityapp:
     image: ghcr.io/edgar-treischl/causalityapp
@@ -44,8 +44,8 @@ services:
       - "traefik.http.routers.causality.rule=Host(`causalityapp.edgar-treischl.de`)"
       - "traefik.http.routers.causality.entrypoints=websecure"
       - "traefik.http.routers.causality.tls.certresolver=le"
-      - "traefik.http.routers.causality.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=shinyuser:$2y$05$vpJT0gHEOBCpUhvB9ofkB.5AlWRtMpXgldi9VUYZl6ME2NIpHzs92"
+      - "traefik.http.routers.causality.middlewares=auth-causality"
+      - "traefik.http.middlewares.auth-causality.basicauth.users=shinyuser:$2y$05$vpJT0gHEOBCpUhvB9ofkB.5AlWRtMpXgldi9VUYZl6ME2NIpHzs92"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
     networks:
       - web
