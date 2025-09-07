@@ -25,11 +25,9 @@ services:
     container_name: causalityapp
     ports:
       - "8001:3838"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.causality.rule=PathPrefix(`/causality`)"
-      - "traefik.http.routers.causality.entrypoints=web"
-      - "traefik.http.services.causality.loadbalancer.server.port=3838"
-      - "traefik.http.routers.causality.middlewares=auth,strip-causality"
-      - "traefik.http.middlewares.strip-causality.stripprefix.prefixes=/causality"
-      - "traefik.http.middlewares.auth.basicauth.users=edgar:$apr1$/5SVg.Dy$8UV5LGWWaDU82MP468X2z/"
+
+  linearregressionapp:
+    image: ghcr.io/edgar-treischl/linearregressionapp
+    container_name: linearregressionapp
+    ports:
+      - "8002:3838"
