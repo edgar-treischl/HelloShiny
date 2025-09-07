@@ -30,4 +30,4 @@ services:
     image: ghcr.io/edgar-treischl/linearregressionapp
     container_name: linearregressionapp
     ports:
-      - "8002:3838"
+      - "8002:80"
