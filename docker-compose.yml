@@ -36,7 +36,7 @@ services:
       - --client-secret=gloas-768145695d9de273fcbffc6fc6bd166e91b0fe8c3339437c92a9fd68c363cc25
       - --cookie-secret=iWUEYmYz3dHQFN1iOcyi26LFG5fesM7bIiQjkJJrx6U=
       - --cookie-domain=.edgar-treischl.de
-      - --cookie-samesite=None
+      - --cookie-samesite=none
       - --email-domain=*
       - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
       - --upstream=file:///dev/null
@@ -50,7 +50,7 @@ services:
       - --skip-provider-button=true
       - --skip-auth-regex=^/favicon.ico$
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4180/ping"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:4180/ping"]
       interval: 30s
       timeout: 5s
       retries: 3
