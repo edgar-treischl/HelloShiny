@@ -35,12 +35,14 @@ services:
       - --client-id=aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6
       - --client-secret=gloas-768145695d9de273fcbffc6fc6bd166e91b0fe8c3339437c92a9fd68c363cc25
       - --cookie-secret=iWUEYmYz3dHQFN1iOcyi26LFG5fesM7bIiQjkJJrx6U=
+      - --cookie-domain=.edgar-treischl.de
       - --email-domain=*
       - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
       - --upstream=file:///dev/null
       - --http-address=0.0.0.0:4180
       - --set-xauthrequest=true
       - --set-authorization-header=true
+      - --code-challenge-method=S256
       - --scope=openid profile email
       - --cookie-secure=true
       - --pass-basic-auth=true
@@ -67,6 +69,6 @@ services:
       - "traefik.http.routers.causality.middlewares=auth"
       - "traefik.http.middlewares.auth.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Auth-Request-User"
+      - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Auth-Request-User,X-Auth-Request-Email,Authorization,X-Auth-Request-Groups"
     networks:
       - web
