@@ -25,7 +25,7 @@ services:
       - web
 
   oauth2-proxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
     restart: unless-stopped
     environment:
       OAUTH2_PROXY_PROVIDER: "gitlab"
@@ -39,6 +39,7 @@ services:
       OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
       OAUTH2_PROXY_SCOPE: "read_user"
       OAUTH2_PROXY_COOKIE_SECURE: "true"
+      OAUTH2_PROXY_LOG_LEVEL: "debug"
 
       # GitLab self-hosted OAuth endpoints
       OAUTH2_PROXY_LOGIN_URL: "https://gitlab.lrz.de/oauth/authorize"
