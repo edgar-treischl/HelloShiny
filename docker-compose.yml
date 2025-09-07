@@ -1,9 +1,10 @@
-version: "3.8"
+networks:
+  web:
+    external: true
 
 services:
   traefik:
     image: traefik:v2.10
-    container_name: traefik
     restart: unless-stopped
     command:
       - "--api.insecure=true"
@@ -25,19 +26,18 @@ services:
 
   oauth2-proxy:
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    container_name: oauth2-proxy
     restart: unless-stopped
     environment:
       OAUTH2_PROXY_PROVIDER: "gitlab"
       OAUTH2_PROXY_CLIENT_ID: "aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6"
       OAUTH2_PROXY_CLIENT_SECRET: "gloas-65042a3cde7ab679c4ccaabb4046516eb5a151b77e1a1b83e53fad0889f7dc3d"
-      OAUTH2_PROXY_COOKIE_SECRET: "MCPjYQXfVmPXt/69cbHONWJpOcvHdzFn"  # Must be 16, 24, or 32 bytes
-      OAUTH2_PROXY_EMAIL_DOMAINS: "*"  # Or use your domain
+      OAUTH2_PROXY_COOKIE_SECRET: "MCPjYQXfVmPXt/69cbHONWJpOcvHdzFn"
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
       OAUTH2_PROXY_REDIRECT_URL: "https://auth.edgar-treischl.de/oauth2/callback"
       OAUTH2_PROXY_UPSTREAMS: "file:///dev/null"
       OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
       OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
-      OAUTH2_PROXY_ISSUER_URL: "https://gitlab.lrz.de"  # your self-hosted GitLab
+      OAUTH2_PROXY_ISSUER_URL: "https://gitlab.lrz.de"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oauth2.rule=Host(`auth.edgar-treischl.de`)"
@@ -49,7 +49,6 @@ services:
 
   causalityapp:
     image: ghcr.io/edgar-treischl/causalityapp
-    container_name: causalityapp
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -57,14 +56,9 @@ services:
       - "traefik.http.routers.causality.entrypoints=websecure"
       - "traefik.http.routers.causality.tls.certresolver=le"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
-      # Middleware for GitLab Auth
       - "traefik.http.routers.causality.middlewares=auth"
       - "traefik.http.middlewares.auth.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth"
       - "traefik.http.middlewares.auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.auth.forwardauth.authResponseHeaders=X-Auth-User"
     networks:
       - web
-
-networks:
-  web:
-    external: true
