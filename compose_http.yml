@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"  # Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  spectredash:
+    image: ghcr.io/edgar-treischl/spectredash
+    container_name: spectredash
+    ports:
+      - "8000:8000"
+
+  causalityapp:
+    image: ghcr.io/edgar-treischl/causalityapp 
+    container_name: causalityapp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.causality.rule=Host(`causalityapp.edgar-treischl.de`)"
+      - "traefik.http.routers.causality.entrypoints=web"
+      - "traefik.http.services.causality.loadbalancer.server.port=3838"
+
+
+  linearregressionapp:
+    image: ghcr.io/edgar-treischl/linearregressionapp
+    container_name: linearregressionapp
+    ports:
+      - "8002:80"

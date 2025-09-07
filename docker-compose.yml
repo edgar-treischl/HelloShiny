@@ -5,33 +5,31 @@ services:
     image: traefik:v2.10
     container_name: traefik
     command:
-      - "--api.insecure=true"
+      - "--api.insecure=true"                                  # Traefik dashboard (disable in prod!)
       - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.address=:80"                        # HTTP entrypoint
+      - "--entrypoints.websecure.address=:443"                 # HTTPS entrypoint
+      - "--certificatesresolvers.le.acme.tlschallenge=true"    # TLS challenge for Let's Encrypt
+      - "--certificatesresolvers.le.acme.email=edgar@edgar-treischl.de"  # Replace with your email
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"  # Redirect HTTP -> HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
     ports:
       - "80:80"
-      - "8080:8080"  # Traefik dashboard
+      - "443:443"
+      - "8080:8080"  # Optional: Traefik dashboard port
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-  spectredash:
-    image: ghcr.io/edgar-treischl/spectredash
-    container_name: spectredash
-    ports:
-      - "8000:8000"
+      - "./letsencrypt:/letsencrypt"
 
   causalityapp:
-    image: ghcr.io/edgar-treischl/causalityapp 
+    image: ghcr.io/edgar-treischl/causalityapp
     container_name: causalityapp
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.causality.rule=Host(`causalityapp.edgar-treischl.de`)"
-      - "traefik.http.routers.causality.entrypoints=web"
+      - "traefik.http.routers.causality.entrypoints=websecure"
+      - "traefik.http.routers.causality.tls.certresolver=le"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
 
 
-  linearregressionapp:
-    image: ghcr.io/edgar-treischl/linearregressionapp
-    container_name: linearregressionapp
-    ports:
-      - "8002:80"
