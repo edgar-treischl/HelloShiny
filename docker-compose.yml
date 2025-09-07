@@ -21,6 +21,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.spectredash.rule=PathPrefix(`/spectredash`)"
       - "traefik.http.routers.spectredash.entrypoints=web"
-      - "traefik.http.services.spectredash.loadbalancer.server.port=3838"
+      - "traefik.http.services.spectredash.loadbalancer.server.port=8000"
       - "traefik.http.routers.spectredash.middlewares=strip-spectredash"
       - "traefik.http.middlewares.strip-spectredash.stripprefix.prefixes=/spectredash"
