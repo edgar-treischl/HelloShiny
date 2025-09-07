@@ -27,11 +27,10 @@ services:
       - "8001:3838"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.causality.rule=PathPrefix(`/causality`)"
+      - "traefik.http.routers.causality.rule=Host(`causality.edgar-treischl.de`)"
       - "traefik.http.routers.causality.entrypoints=web"
-      - "traefik.http.routers.causality.middlewares=causality-strip"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
-      - "traefik.http.middlewares.causality-strip.stripprefix.prefixes=/causality"
+
 
   linearregressionapp:
     image: ghcr.io/edgar-treischl/linearregressionapp
