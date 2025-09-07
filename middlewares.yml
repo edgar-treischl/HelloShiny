@@ -1,8 +1,10 @@
 http:
   middlewares:
-    auth-causality:
-      basicAuth:
-        usersFile: "/config/.htpasswd"
     auth-dashboard:
       basicAuth:
-        usersFile: "/config/.htpasswd"
+        users:
+          - "shinyuser:$2y$05$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC"
+    auth-causality:
+      basicAuth:
+        users:
+          - "shinyuser:$2y$05$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC"
