@@ -17,7 +17,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "8080:8080"  # Traefik dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
@@ -38,8 +38,9 @@ services:
       OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
       OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
       OAUTH2_PROXY_SCOPE: "read_user"
+      OAUTH2_PROXY_COOKIE_SECURE: "true"
 
-      # Required for self-hosted GitLab
+      # GitLab self-hosted OAuth endpoints
       OAUTH2_PROXY_LOGIN_URL: "https://gitlab.lrz.de/oauth/authorize"
       OAUTH2_PROXY_REDEEM_URL: "https://gitlab.lrz.de/oauth/token"
       OAUTH2_PROXY_PROFILE_URL: "https://gitlab.lrz.de/api/v4/user"
