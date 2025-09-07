@@ -23,8 +23,6 @@ services:
   causalityapp:
     image: ghcr.io/edgar-treischl/causalityapp 
     container_name: causalityapp
-    ports:
-      - "8001:3838"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.causality.rule=Host(`causalityapp.edgar-treischl.de`)"
