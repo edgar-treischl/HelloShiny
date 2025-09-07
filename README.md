@@ -25,3 +25,9 @@ sudo apt install apache2-utils
 htpasswd -nb edgar shinyuser
 htpasswd -nbB edgar shinyuser
 ```
+
+Cookie
+
+´´´
+head -c 32 /dev/urandom | base64 | head -c 32
+´´´
