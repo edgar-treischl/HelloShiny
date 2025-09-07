@@ -9,10 +9,9 @@ services:
     image: traefik:v2.10
     restart: unless-stopped
     command:
-      - "--api.insecure=false"
+      - "--api.insecure=false"  # Set to false for security
       - "--api.dashboard=true"
       - "--providers.docker=true"
-      - "--providers.file.filename=/config/middlewares.yml"   # <- add this line
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.le.acme.email=edgar.treischl@isb.bayern.de"
@@ -21,22 +20,21 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "8080:8080"  # Dashboard, protected via subdomain + auth
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
-      - "./middlewares.yml:/config/middlewares.yml:ro"   # <- mount your dynamic config
-      - "./.htpasswd:/config/.htpasswd:ro"               # <- mount your htpasswd file
     networks:
       - web
     labels:
-      # Dashboard with auth
+      # Traefik dashboard on traefik.edgar-treischl.de
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.edgar-treischl.de`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.tls.certresolver=le"
       - "traefik.http.routers.traefik.middlewares=auth-dashboard"
+      - "traefik.http.middlewares.auth-dashboard.basicauth.users=shinyuser:$2y$$05$$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC"
 
   causalityapp:
     image: ghcr.io/edgar-treischl/causalityapp
@@ -47,6 +45,7 @@ services:
       - "traefik.http.routers.causality.entrypoints=websecure"
       - "traefik.http.routers.causality.tls.certresolver=le"
       - "traefik.http.routers.causality.middlewares=auth-causality"
+      - "traefik.http.middlewares.auth-causality.basicauth.users=shinyuser:$2y$$05$$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
     networks:
       - web

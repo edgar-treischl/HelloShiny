@@ -41,3 +41,13 @@ docker network create web
 ````
 htpasswd -nbB shinyuser shinyuser
 ```
+
+
+````
+# To create a new .htpasswd file with first user
+htpasswd -cB .htpasswd shinyuser
+
+# Add more users (without -c to avoid overwriting)
+htpasswd -B .htpasswd user2
+htpasswd -B .htpasswd user3
+````
