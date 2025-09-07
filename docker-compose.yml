@@ -39,7 +39,6 @@ services:
       - --cookie-samesite=none
       - --email-domain=*
       - --redirect-url=https://auth.edgar-treischl.de/oauth2/callback
-      - --upstream=http://127.0.0.1/
       - --http-address=0.0.0.0:4180
       - --set-xauthrequest=true
       - --set-authorization-header=true
