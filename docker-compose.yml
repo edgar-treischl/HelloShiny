@@ -43,7 +43,6 @@ services:
       - --set-authorization-header=true
       - --scope=openid profile email
       - --cookie-secure=true
-      - --log-level=debug
       - --pass-basic-auth=true
       - --skip-provider-button=true
       - --skip-auth-regex=^/favicon.ico$
