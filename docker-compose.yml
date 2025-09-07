@@ -29,7 +29,7 @@ services:
       OAUTH2_PROXY_PROVIDER: "gitlab"
       OAUTH2_PROXY_CLIENT_ID: "aec7a136c8c16f73068e9f061249b35d6bc5cbc2de181630884678a6c027e9e6"
       OAUTH2_PROXY_CLIENT_SECRET: "gloas-65042a3cde7ab679c4ccaabb4046516eb5a151b77e1a1b83e53fad0889f7dc3d"
-      OAUTH2_PROXY_COOKIE_SECRET: "fcz/PRELjtlRI+zFyAJDW5CsYLRFO+M/qHGbSZEp8cM="  # generate securely
+      OAUTH2_PROXY_COOKIE_SECRET: "76ffbd7a6ce0139004f529fcfce1a90393836b8316e6585e6d1363f13bfc024c"  # generate securely
       OAUTH2_PROXY_EMAIL_DOMAINS: "*"  # restrict to your domain if needed
       OAUTH2_PROXY_REDIRECT_URL: "https://auth.edgar-treischl.de/oauth2/callback"
       OAUTH2_PROXY_UPSTREAMS: "file:///dev/null"  # no upstream because Traefik does forwarding auth
