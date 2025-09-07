@@ -45,7 +45,7 @@ services:
       - "traefik.http.routers.causality.entrypoints=websecure"
       - "traefik.http.routers.causality.tls.certresolver=le"
       - "traefik.http.routers.causality.middlewares=auth-causality"
-      - "traefik.http.middlewares.auth-causality.basicauth.users=shinyuser:$2y$05$vpJT0gHEOBCpUhvB9ofkB.5AlWRtMpXgldi9VUYZl6ME2NIpHzs92"
+      - "traefik.http.middlewares.auth-causality.basicauth.users=shinyuser:$2y$05$xfJdf18R8XWIFR8gr3l9N.bMN1P3iE3H7BaBDpDwYc/PfFpK7JBFC"
       - "traefik.http.services.causality.loadbalancer.server.port=3838"
     networks:
       - web
