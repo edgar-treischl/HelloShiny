@@ -1,51 +1,27 @@
 version: "3.8"
 
-networks:
-  web:
-    external: true
-
 services:
-  traefik:
-    image: traefik:v2.10
+  spectrapp:
+    image: ghcr.io/edgar-treischl/spectredash
     restart: unless-stopped
-    command:
-      - "--api.insecure=false"  # Set to false for security
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.le.acme.email=edgar.treischl@isb.bayern.de"
-      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.le.acme.tlschallenge=true"
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"  # Dashboard, protected via subdomain + auth
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"
+    expose:
+      - "8000"
     networks:
-      - web
-    labels:
-      # Traefik dashboard on traefik.edgar-treischl.de
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.edgar-treischl.de`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.tls.certresolver=le"
-      - "traefik.http.routers.traefik.middlewares=auth-dashboard"
-      - "traefik.http.middlewares.auth-dashboard.basicauth.users=shinyuser:$2y$$05$$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC"
+      - internal
 
-  causalityapp:
-    image: ghcr.io/edgar-treischl/causalityapp
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.causality.rule=Host(`causalityapp.edgar-treischl.de`)"
-      - "traefik.http.routers.causality.entrypoints=websecure"
-      - "traefik.http.routers.causality.tls.certresolver=le"
-      - "traefik.http.routers.causality.middlewares=auth-causality"
-      - "traefik.http.middlewares.auth-causality.basicauth.users=shinyuser:$2y$$05$$S2NRaZ4aFzqsCfDbr.jKmuymw/6qiSLzKLk.RTSvY9hoV8paBgdjC, edgar:$2y$$05$$7meTum42o3AnpK.9pSrF0e89xOyCNMihrRqP5ygSOe2OhN4SAUP1e"
-      - "traefik.http.services.causality.loadbalancer.server.port=3838"
+  causality-proxy:
+    image: nginx:alpine
+    container_name: causality-proxy
+    ports:
+      - "8181:80"  # Access app at http://IP:8181
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    depends_on:
+      - spectrapp
     networks:
-      - web
+      - internal
+
+networks:
+  internal:
+    driver: bridge
