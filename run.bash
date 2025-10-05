@@ -20,5 +20,4 @@ docker pull ghcr.io/edgar-treischl/spectredash:latest
 echo "Starting Shiny apps with Docker Compose..."
 docker compose up -d
 
-
-#chmod +x startup.sh
+#chmod +x run.sh
