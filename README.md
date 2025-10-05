@@ -11,6 +11,9 @@ Pull images:
 
 ````
 docker pull ghcr.io/edgar-treischl/spectredash:latest
+
+docker pull gitlab.lrz.de:5005/edgar-treischl/sp3ctrapp
+docker login gitlab.lrz.de:5005
 ````
 
 

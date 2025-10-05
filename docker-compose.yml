@@ -18,7 +18,6 @@ services:
       - "8181:80"  # Access app at http://IP:8181
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     depends_on:
       - spectrapp
     networks:
