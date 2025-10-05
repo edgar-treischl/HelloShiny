@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   spectrapp:
-    image: ghcr.io/edgar-treischl/spectredash
+    image: gitlab.lrz.de:5005/edgar-treischl/sp3ctrapp
     restart: unless-stopped
     expose:
       - "8000"
