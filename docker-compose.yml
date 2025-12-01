@@ -14,8 +14,9 @@ services:
   causality-proxy:
     image: nginx:alpine
     container_name: causality-proxy
+    restart: unless-stopped           
     ports:
-      - "8181:80"  # Access app at http://IP:8181
+      - "8181:80"                      # Access app at http://IP:8181
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     depends_on:
