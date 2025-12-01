@@ -1,5 +1,5 @@
 
-## Installation
+## Installation of Hello Shiny
 
 ````
 chmod +x docker.sh
