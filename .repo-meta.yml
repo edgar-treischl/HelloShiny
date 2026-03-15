@@ -1,0 +1,15 @@
+name: CausalityApp
+description: Shiny App to Learn Causal Inference
+active: stale
+dev_path: apps
+role: project
+tags:
+  - apps
+language: docker
+setup: []
+env: []
+services: []
+depends_on: []
+workspace: []
+update_strategy: []
+priority: []
